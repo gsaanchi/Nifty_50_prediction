@@ -1,6 +1,10 @@
 
 # Nifty Sentiment Analysis Dashboard
 
+[Watch the Demo Video](https://drive.google.com/drive/u/0/folders/1kUdMGM_qRKRFeiOPI_epeayjD0lZarUT)
+
+![App Screenshot](res/app.png)
+
 [Live Demo on Streamlit Cloud](https://nifty-sentiment-pi6kzv4xbpasfegwu6n6ft.streamlit.app/)
 
 ---
