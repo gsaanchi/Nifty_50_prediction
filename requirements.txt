@@ -1,0 +1,12 @@
+beautifulsoup4
+matplotlib
+nltk
+nsepython
+numpy
+pandas
+plotly
+pytz
+Requests
+lxml
+huggingface-hub
+duckdb
