@@ -72,10 +72,6 @@ The project follows a modular architecture with clear separation of concerns:
    python dashboard-generation.py
    ```
 
-Live instances of the app can be found at:
-1. [Streamlit Cloud](https://nifty-sad.streamlit.app/)
-2. [Github Pages](https://shubxam.github.io/NIFTY_500_live_sentiment.html)
-
 ## Data Pipeline
 
 The project implements a robust data pipeline that includes:
@@ -111,11 +107,6 @@ The project includes comprehensive test coverage:
 - Error handling and edge cases
 - Database operation validation
 - Performance benchmarking
-
-## Project Documentation
-- [Project Guidelines](./guidelines.md) - Development standards and practices
-- [Project Log](./agent_project_log.md) - Technical decisions and updates
-- [Companion Article](https://xumitcapital.medium.com/sentiment-analysis-dashboard-using-python-d40506e2709d)
 
 ## Technical Stack
 - Python 3.10+
