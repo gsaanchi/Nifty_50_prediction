@@ -1,9 +1,7 @@
 
 # Nifty Sentiment Analysis Dashboard
 
-[Watch the Demo Video](https://drive.google.com/drive/u/0/folders/1kUdMGM_qRKRFeiOPI_epeayjD0lZarUT)
-
-![App Screenshot](res/app.png)
+[![Watch the Demo Video](res/app.png)](https://github.com/gsaanchi/Nifty-Sentiment/raw/main/demo%20video/Recording%202025-03-03%20193333.mp4)
 
 [Live Demo on Streamlit Cloud](https://nifty-sentiment-pi6kzv4xbpasfegwu6n6ft.streamlit.app/)
 
