@@ -1,0 +1,45 @@
+name: Get Sentiment and update GitHub page
+
+on:
+  schedule:
+    - cron: "30 11 * * *" #runs at 11:30 utc (17:00 ist) everyday
+  workflow_dispatch: # allows manual triggering of the workflow
+
+jobs:
+  fetch-data-update-dashboard:
+    runs-on: ubuntu-latest
+
+    env: # shared across this job
+      python_version: "3.13"
+      HF_API_KEY: ${{ secrets.HF_API_KEY }}
+    
+    permissions:
+      contents: write # required to push changes to the repo
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install latest uv version
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.6.12"
+          enable-cache: true
+          cache-dependency-glob: "**/pyproject.toml"
+          python-version: ${{ env.python_version }}
+          
+      - name: Install necessary libraries using uv
+        run: make install
+
+      - name: Execute main python file
+        run: make run
+
+      - name: Execute python script to update sentiment page
+        run: make dashboard
+
+      - name: save csv file
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m 'update db file using GH Actions'
+          git push
