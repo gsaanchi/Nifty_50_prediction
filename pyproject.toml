@@ -1,0 +1,161 @@
+# ---- Project Info and Dependencies ----
+
+[project.urls]
+Repository = "https://github.com/shubxam/Nifty-500-Live-Sentiment-Analysis"
+# Homepage = "https://..."
+# Documentation = "https://..."
+
+[project]
+name = "Nifty-500-Live-Sentiment-Analysis"
+description = "real time sentiment analysis of nifty-500 stocks"
+authors = [
+    { name="shubham soni", email="shubxam@gmail.com" },
+]
+readme = ""
+license = "MIT"
+version = "0.1.0"  # Using static version instead of dynamic
+requires-python = ">=3.11,<4.0"
+
+# ---- Main dependencies ----
+
+dependencies = [
+    "beautifulsoup4>=4.13.3",
+    "duckdb>=1.2.1",
+    "httpx>=0.28.1",
+    "loguru>=0.7.3",
+    "lxml>=5.3.1",
+    "matplotlib>=3.10.1",
+    "nse>=1.1.0",
+    "pandas>=2.2.3",
+    "plotly>=6.0.1",
+    "pytz>=2025.2",
+    "torch>=2.6.0",
+    "tqdm>=4.67.1",
+    "transformers>=4.51.3",
+]
+
+
+# ---- Dev dependencies ----
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "ruff>=0.11.0",
+    "codespell>=2.4.1",
+    "rich>=13.9.4",
+    "basedpyright>=1.28.2",
+    "funlog>=0.2.0",
+    "ipykernel>=6.29.5",
+    "iprogress>=0.4",
+    "ipywidgets>=8.1.6",
+]
+
+[project.scripts]
+# Update script entry point to point to the run() function
+Nifty-500-Live-Sentiment-Analysis = "src.main:run"
+
+# ---- Settings ----
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cpu" },
+]
+
+[tool.ruff]
+# Set as desired, typically 88 (black standard) or 100 (wide).
+line-length = 100
+
+[tool.ruff.lint]
+# See: https://docs.astral.sh/ruff/rules/
+select = [
+    # Basic list from: https://docs.astral.sh/ruff/linter/#rule-selection
+    "E", # https://docs.astral.sh/ruff/rules/#error-e
+    "F", # https://docs.astral.sh/ruff/rules/#pyflakes-f
+    "UP", # https://docs.astral.sh/ruff/rules/#pyupgrade-up
+    "B", # https://docs.astral.sh/ruff/rules/#flake8-bugbear-b
+    "I", # https://docs.astral.sh/ruff/rules/#isort-i
+    "SIM", # https://docs.astral.sh/ruff/rules/#flake8-simplify-sim
+    # Other possibilities:
+    # "D" # https://docs.astral.sh/ruff/rules/#pydocstyle-d
+    # "Q" # https://docs.astral.sh/ruff/rules/#flake8-quotes-q
+    "COM" # https://docs.astral.sh/ruff/rules/#flake8-commas-com
+
+]
+ignore = [
+    "E501", # https://docs.astral.sh/ruff/rules/line-too-long/
+    "E402", # https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file/
+    "E731", # https://docs.astral.sh/ruff/rules/lambda-assignment/
+    # We use both ruff formatter and linter so some rules should always be disabled.
+    # See: https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+    "W191", # https://docs.astral.sh/ruff/rules/tab-indentation/
+    "E111", # https://docs.astral.sh/ruff/rules/indentation-with-invalid-multiple/
+    "E114", # https://docs.astral.sh/ruff/rules/indentation-with-invalid-multiple-comment/
+    "E117", # https://docs.astral.sh/ruff/rules/over-indented/
+    "D206", # https://docs.astral.sh/ruff/rules/docstring-tab-indentation/
+    "D300", # https://docs.astral.sh/ruff/rules/triple-single-quotes/
+    "Q000", # https://docs.astral.sh/ruff/rules/bad-quotes-inline-string/
+    "Q001", # https://docs.astral.sh/ruff/rules/bad-quotes-multiline-string/
+    "Q002", # https://docs.astral.sh/ruff/rules/bad-quotes-docstring/
+    "Q003", # https://docs.astral.sh/ruff/rules/avoidable-escaped-quote/
+    "COM812", # https://docs.astral.sh/ruff/rules/missing-trailing-comma/
+    "COM819", # https://docs.astral.sh/ruff/rules/prohibited-trailing-comma/
+    "ISC002", # https://docs.astral.sh/ruff/rules/multi-line-implicit-string-concatenation/
+]
+
+# BasedPyright currently seems like the best type checker option, much faster
+# than mypy and with a good extension for VSCode/Cursor.
+# https://marketplace.visualstudio.com/items?itemName=detachhead.basedpyright
+# https://docs.basedpyright.com/latest/configuration/config-files/#sample-pyprojecttoml-file
+[tool.basedpyright]
+# Specifies the directories BasedPyright should analyze.
+# Opinion: Essential setting to define the scope of type checking.
+include = ["src", "tests", "devtools"]
+
+# Make ignoring type warnings easier:
+# Allows using `# type: ignore` without specifying a rule code (e.g., `# type: ignore[attr-defined]`).
+# Opinion: Can make ignoring errors quicker but less explicit. Often preferred to keep it `true` for better clarity on *why* an error is ignored.
+reportIgnoreCommentWithoutRule = false
+# Reports `# type: ignore` comments that are no longer necessary (e.g., code changed, error fixed).
+# Opinion: Generally useful (`true`) to keep ignore comments clean and relevant. Setting to `false` might be done temporarily during heavy refactoring.
+reportUnnecessaryTypeIgnoreComment = false
+
+# A few typically noisy warnings, comment/uncomment as desired:
+# Reports errors when trying to import a module for which no type stubs (external type information) are found.
+# Opinion: Can be noisy for libraries without stubs. Setting to `false` is common if you don't want to generate/find stubs for all dependencies. `true` encourages better type coverage.
+reportMissingTypeStubs = false
+# Reports when the result of a function call (that might have side effects or return important values) is not used.
+# Opinion: Can be helpful to catch potential bugs where a return value should have been checked or used. Can also be noisy if functions are called purely for side effects and don't return anything meaningful (`None`). Setting to `false` reduces noise in such cases.
+reportUnusedCallResult = false
+# reportMissingImports = false
+# reportUnnecessaryIsInstance = false
+# reportUnreachable = false
+reportAny = false
+reportExplicitAny = false
+# Reports variables whose type cannot be fully determined (often leading to "partially unknown" errors).
+# Opinion: Set to `false` to reduce noise if full type inference isn't always possible or desired.
+reportUnknownVariableType = false
+# Reports function arguments whose type cannot be fully determined.
+# Opinion: Set to `false` to reduce noise, similar to `reportUnknownVariableType`.
+reportUnknownArgumentType = false
+reportUnknownMemberType = false
+reportOptionalMemberAccess = false
+
+[tool.codespell]
+# ignore-words-list = "foo,bar"
+# skip = "foo.py,bar.py"
+
+[tool.pytest.ini_options]
+python_files = ["*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+testpaths = [
+    "src",
+    "tests",
+]
+norecursedirs = []
+filterwarnings = []
