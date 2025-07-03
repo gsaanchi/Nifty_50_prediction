@@ -3,7 +3,7 @@
 
 [![Watch the Demo Video](res/app.png)](https://github.com/gsaanchi/Nifty-Sentiment/raw/main/demo%20video/Recording%202025-03-03%20193333.mp4)
 
-[Live Demo on Streamlit Cloud](https://nifty-sentiment-pi6kzv4xbpasfegwu6n6ft.streamlit.app/)
+[Live Demo on Streamlit Cloud](https://nifty50prediction-gcy7rgascn34iwdty9nnjq.streamlit.app/)
 
 ---
 
