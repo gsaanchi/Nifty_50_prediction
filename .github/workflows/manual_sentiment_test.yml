@@ -1,0 +1,25 @@
+name: Manual Sentiment Analysis Test
+
+on:
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  run-sentiment-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: install latest uv version
+      uses: astral-sh/setup-uv@v5
+      with:
+        version: "latest"
+        # enable-cache: true
+        # cache-dependency-glob: "**/pyproject.toml"
+
+    - name: Install dependencies
+      run: make install
+
+    - name: Run sentiment analysis test script
+      run: uv run src/sentiment_analysis_test.py
