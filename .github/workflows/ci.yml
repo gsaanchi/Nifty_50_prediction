@@ -1,0 +1,51 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: CI
+
+on:
+  push:
+    # Use ["main", "master"] for CI only on the default branch.
+    # Use ["**"] for CI on all branches.
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      python-version: "3.13"
+
+    steps:
+      # Generally following uv docs:
+      # https://docs.astral.sh/uv/guides/integration/github/
+
+      - name: Checkout (official GitHub action)
+        uses: actions/checkout@v4
+        with:
+          # Important for versioning plugins:
+          fetch-depth: 0
+
+      - name: Install uv (official Astral action)
+        uses: astral-sh/setup-uv@v5
+        with:
+          # Update this as needed:
+          version: "0.6.11"
+          enable-cache: true
+          python-version: ${{ env.python-version }}
+
+      - name: Set up Python (using uv)
+        run: make install
+
+      - name: Install all dependencies
+        run: make install-dev
+
+      - name: Run linting
+        run: make lint
+
+      - name: Run tests
+        run: make test
