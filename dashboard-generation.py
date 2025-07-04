@@ -351,27 +351,44 @@ def compute_log_returns_and_trends(price_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def main():
+    """Main function to run the Streamlit app."""
+    # Get current date, time and timezone to print to the App
     now = Instant.now().to_tz("Asia/Kolkata")
     datetime_now = now.py_datetime().strftime("%d/%m/%Y %H:%M:%S")
 
+    # --- Sidebar / Filters ---
     st.sidebar.header("Filters")
-    st.sidebar.selectbox("Pick the Date Range", DatePickerOptions.__args__, key="date_filter")
-    st.sidebar.selectbox("Select Universe of Stocks", IndexType.__args__, key="universe_filter")
+    st.sidebar.selectbox(
+        "Pick the Date Range",
+        DatePickerOptions.__args__,
+        key="date_filter",
+    )
+    st.sidebar.selectbox(
+        "Select Universe of Stocks",
+        IndexType.__args__,
+        key="universe_filter",
+    )
 
-    universe = st.session_state["universe_filter"]
-    universe_string = UNIVERSE_NAMES_DICT[universe]
-    date_filter = st.session_state["date_filter"]
-    cut_off_date = get_relative_date(date_filter)
+    # --- Data Loading and Processing ---
+    universe: IndexType = st.session_state["universe_filter"]
+    universe_string: str = UNIVERSE_NAMES_DICT[universe]
+    date_filter: DatePickerOptions = st.session_state["date_filter"]
+    cut_off_date: str = get_relative_date(date_filter)
 
+    # Load data using cached function
     articles_data, ticker_metadata = load_data(universe, cut_off_date)
-    final_df = calculate_sentiment(articles_data, ticker_metadata)
 
+    # Calculate sentiment using cached function
+    final_df: pd.DataFrame = calculate_sentiment(articles_data, ticker_metadata)
+
+    # --- App Layout ---
     st.header(f"{universe_string} stocks Sentiment Analyzer")
 
     st.markdown(
         f"This dashboard gives users an almost real-time comprehensive visual overview on the sentiments of various NIFTY indices. It analyses the ticker specific news from the **{date_filter}** from the internet."
     )
 
+    # --- Treemap Chart ---
     if not final_df.empty:
         fig = create_treemap(final_df, universe_string)
         if fig:
@@ -381,9 +398,10 @@ def main():
     else:
         st.warning(f"No data available for the selected filters ({universe_string}, {date_filter}). Please try different filters.")
 
+    # --- Stock Specific News Section ---
     st.subheader("Stock Specific News")
     if not final_df.empty:
-        selected_ticker = st.selectbox(
+        selected_ticker: str | None = st.selectbox(
             "Type or select the Symbol name to get associated news:",
             options=sorted(list(final_df["ticker"].unique())),
             key="newsbox",
@@ -395,6 +413,7 @@ def main():
                 price_df = get_price_data_yf(selected_ticker, period="5y")
                 price_df = compute_log_returns_and_trends(price_df)
 
+            # Debug outputs
             st.write(f"Selected ticker: {selected_ticker}")
             st.write(f"Price dataframe shape: {price_df.shape}")
             st.write(price_df.head())
@@ -413,8 +432,12 @@ def main():
     else:
         st.info("Select filters with data to enable news section.")
 
-    st.markdown("---")
-    st.info(f"This dashboard is updated everyday at 17:30 IST. Last Refreshed: {datetime_now} ({now.tz})")
+    # --- Footer ---
+    st.markdown("---")  # Add a separator
+    st.info(
+        f"This dashboard is updated everyday at 17:30 IST. Last Refreshed: {datetime_now} ({now.tz})"
+    )
+
 
 
 if __name__ == "__main__":
