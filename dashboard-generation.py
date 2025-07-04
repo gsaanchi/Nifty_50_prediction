@@ -176,7 +176,21 @@ def main():
         st.warning(f"No data available for the selected filters ({universe_string}, {date_filter}). Please try different filters.")
 
 
-    # --- Stock Specific News Section ---
+    # # --- Stock Specific News Section ---
+    # st.subheader("Stock Specific News")
+    # if not final_df.empty:
+    #     selected_ticker: str | None = st.selectbox(
+    #         "Type or select the Symbol name to get associated news:",
+    #         options=sorted(list(final_df["ticker"].unique())),
+    #         key="newsbox",
+    #     )
+    #     if selected_ticker:
+    #         display_news(articles_data, selected_ticker)
+    #     else:
+    #         st.info("Select a ticker to view news.")
+    # else:
+    #      st.info("Select filters with data to enable news section.")
+
     st.subheader("Stock Specific News")
     if not final_df.empty:
         selected_ticker: str | None = st.selectbox(
@@ -186,11 +200,16 @@ def main():
         )
         if selected_ticker:
             display_news(articles_data, selected_ticker)
+            
+            # Add button to go to next page
+            if st.button("Go to Predictive Insights Page"):
+                st.session_state["selected_ticker_for_prediction"] = selected_ticker
+                st.success(f"Ticker '{selected_ticker}' saved for prediction.")
+                st.info("Please go to the 'Prediction' page from the sidebar to see predictive insights.")
         else:
             st.info("Select a ticker to view news.")
     else:
-         st.info("Select filters with data to enable news section.")
-
+        st.info("Select filters with data to enable news section.")
 
     # --- Footer ---
     st.markdown("---") # Add a separator
